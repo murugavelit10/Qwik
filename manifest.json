@@ -1,0 +1,55 @@
+{
+	"background": {
+		"scripts": ["scripts/app/bg.js"],
+		"persistent": false
+	},
+	"content_scripts": [
+		{
+			"all_frames": true,
+			"js": ["scripts/app/cs.js"],
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"run_at": "document_start"
+		},
+		{
+			"all_frames": false,
+			"js": ["scripts/app/cs.js"],
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"run_at": "document_end"
+		}
+	],
+	"manifest_version": 2,
+	"name": "Qwik",
+	"description": "This extension helps you to work smarter, better and easier. Qwik will provide you a way to login into your desired web application with just a single click!",
+	"version": "0.0.1",
+	"browser_action": {
+		"default_icon": {
+			"19": "images/icon-19x19.png",
+			"38": "images/icon-38x38.png"
+		},
+		"default_popup": "templates/ba.html"
+	},
+	"icons": {
+		"16": "images/icon-16x16.png",
+		"48": "images/icon-48x48.png",
+		"128": "images/icon-128x128.png"
+	},
+	"permissions": [
+		"http://*/*",
+		"https://*/*",
+		"contextMenus",
+		"tabs",
+		"idle",
+		"webRequestBlocking",
+		"webNavigation",
+		"alarms",
+		"storage",
+		"unlimitedStorage",
+		"notifications"
+	]
+}

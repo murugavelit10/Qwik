@@ -1,0 +1,81 @@
+{
+	"maximumLabels": 10,
+	"totalLabels": 2,
+	"labels": [
+		{
+			"id": 1,
+			"name": "WKSC",
+			"visible": true,
+			"disabled": false,
+			"favorite": true,
+			"position": 1
+		},
+		{
+			"id": 1,
+			"name": "H2O",
+			"visible": true,
+			"disabled": false,
+			"favorite": true,
+			"position": 2
+		}
+	],
+	"deletedLabels": [],
+	"labelDetails": {
+		"WKSC": [
+			{
+				"labelId": 1,
+				"name": "Hudson-WksActivities",
+				"visible": true,
+				"disabled": false,
+				"favorite": true,
+				"position": 1,
+				"url": "https://build.bansel.it/hudson/login",
+				"hasInputs": true,
+				"inputs": [
+					{
+						"fieldSelector": "[name='j_username']",
+						"type": "text",
+						"value": "gbs03602"
+					},
+					{
+						"fieldSelector": "[name='j_password']",
+						"type": "password",
+						"value": "jul2015nmv"
+					},
+					{
+						"fieldSelector": "[name='remember_me']",
+						"type": "checkbox",
+						"value": true
+					}
+				],
+				"nextUrl": "https://build.bansel.it/hudson/view/EAR builds/job/EAR-WksActivities"
+			}
+		],
+		"H2O": [
+			{
+				"labelId": 1,
+				"name": "TEST-WKSC",
+				"visible": true,
+				"disabled": false,
+				"favorite": true,
+				"position": 2,
+				"url": "https://te-x-net.bansel.it",
+				"hasInputs": true,
+				"inputs": [
+					{
+						"fieldSelector": "[name='UserId']",
+						"type": "text",
+						"value": "gbs03602"
+					},
+					{
+						"fieldSelector": "[name='Password']",
+						"type": "password",
+						"value": "tejul2015nmv"
+					}
+				],
+				"nextUrl": "https://te-x-net.bansel.it/wkscommerciale"
+			}
+		]
+	},
+	"deletedLabelDetails": {}
+}
