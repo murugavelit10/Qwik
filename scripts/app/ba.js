@@ -1,9 +1,66 @@
 (function ($) {
-	qwikApp = {
-		getLabels: function () {
+	var qwikApp = {
+		init : function() {
+			var addLabelCb = _.bind(function(){
+				this.addLabel();
+			}, this);
+			$('.addLabel').on('click', function(e) {
+				e.preventDefault();
+				$('.labels').fadeOut(addLabelCb);
+			});
+			var addLabelDetailCb = _.bind(function(){
+				this.addLabelDetail();
+			}, this);
+			$('.addLabelDetail').on('click', function(e) {
+				e.preventDefault();
+				$('.labelDetails').fadeOut(addLabelDetailCb);
+			});
+			$('.label, .labelDetail').on('mouseenter', _.bind(function(e){
+				$(e.currentTarget).find('.actions').show();
+			}, this)).on('mouseleave', _.bind(function(e){
+				$(e.currentTarget).find('.actions').hide();
+			}, this));
+			this.getUserData();
+		},
+		qwikAppData : {
+			maximumLabels: 10,
+			totalLabels: 0,
+			labels: [],
+			deletedLabels: [],
+			labelDetails: {},
+			deletedLabelDetails: {}
+		},
+		showLabels : function() {
+			var labelsList = $('.labelsList');
+			labelsList.html('');
+			if(_.has(this.qwikAppData, 'labels') && _.size(this.qwikAppData.labels) > 0) {
+				$('.noLabels').addClass('hidden');
+				_.each(this.qwikAppData.labels, function(v, i){
+					var id = v.id;
+					var name = v.name;
+					var li = this.creatElement('li', {class: 'label'});
+					var labelText = this.creatElement('div', {class: 'labelText fl m-top-3', 'data-id': id}, name);
+					var actions = this.creatElement('div', {class: 'actions fr', 'style': 'display:none'});
+					var editIcon = this.creatElement('div', {class: 'edit btn fa fw fa-pencil fl'});
+					var deleteIcon = this.creatElement('div', {class: 'delete btn error fa fw fa-trash fl', 'style': 'margin-left:10px'});
+					actions.append(editIcon, deleteIcon, this.creatElement('div', {class: 'clearfix'}));
+					li.append(labelText, actions, this.creatElement('div', {class: 'clearfix'}));
+					/*<li class="label">
+						<div class="fl labelText m-top-3">Label 3</div>
+							<div class="fr actions" style="display:none">
+								<div class="fl edit btn fa fa-pencil fw"></div>
+									<div class="fl delete btn error fa fa-trash fw" style="margin-left:10px"></div>
+										<div class="clearfix"></div>
+											</div>
+											<div class="clearfix"></div>
+												</li>*/
+				}, this);
+			} else {
+				$('.noLabels').removeClass('hidden');
+			}
 
 		},
-		addLabel: function () {
+		addLabel : function() {
 			var addLabelForm = $('.addLabelForm');
 			/* clean div content before appding elements */
 			addLabelForm.html('');
@@ -35,26 +92,17 @@
 			var cancel = this.creatElement('button', {name: 'addLabelCancel', 'id': 'addLabelCancel', class: 'fl btn error', style: 'margin-left:10px'}, 'Cancel');
 			field5.append(save, cancel, this.creatElement('div', {class: 'clearfix'}));
 			addLabelForm.append(field1, field2, field3, field4, field5);
-			$('.addLabelForm').fadeIn();
-			this.attachAddLabelActionButtonEvents();
-		},
-		attachAddLabelActionButtonEvents: function() {
-			$('.addLabelForm').find('#addLabelSave').on('click', function() {
+			addLabelForm.find('#addLabelSave').on('click', function() {
 				alert('add label save clicked!');
 			});
-			$('.addLabelForm').find('#addLabelCancel').on('click', _.bind(function() {
-				$('.addLabelForm').fadeOut(function() {
+			addLabelForm.find('#addLabelCancel').on('click', _.bind(function() {
+				addLabelForm.fadeOut(function() {
 					$('.labels').fadeIn();
 				});
 			}, this));
+			$('.addLabelForm').fadeIn();
 		},
-		editLabel: function (lId) {
-
-		},
-		getLabelDetail: function (lId) {
-
-		},
-		addLabelDetail: function (lId) {
+		addLabelDetail: function () {
 			var addLabelDetailForm = $('.addLabelDetailForm');
 			/* clean div content before appding elements */
 			addLabelDetailForm.html('');
@@ -103,94 +151,40 @@
 			var cancel = this.creatElement('button', {name: 'addLabelDetailCancel', 'id': 'addLabelDetailCancel', class: 'fl btn error', style: 'margin-left:10px', type: 'button'}, 'Cancel');
 			field6.append(save, cancel, this.creatElement('div', {class: 'clearfix'}));
 			addLabelDetailForm.append(field1, field2, field3, field4, field5, field6).fadeIn();
-			this.attachAddLabelDetailActionButtonEvents();
-		},
-		attachAddLabelDetailActionButtonEvents: function() {
-			$('.addLabelDetailForm').find('#addLabelDetailSave').on('click', function() {
+			addLabelDetailForm.find('#addLabelDetailSave').on('click', function() {
 				alert('add label save clicked!');
 			});
-			$('.addLabelDetailForm').find('#addLabelDetailCancel').on('click', _.bind(function() {
-				$('.addLabelDetailForm').fadeOut(function() {
+			addLabelDetailForm.find('#addLabelDetailCancel').on('click', _.bind(function() {
+				addLabelDetailForm.fadeOut(function() {
 					$('.labelDetails').fadeIn();
 				});
 			}, this));
 		},
-		editLabelDetail: function (lId, ldId) {
-
-		},
-		validateAddLabel: function () {
-
-		},
-		validateEditLabel: function () {
-
-		},
-		validateAddLabelDetail: function () {
-
-		},
-		validateEditLabelDetail: function () {
-
+		getUserData : function() {
+			chrome.storage.sync.get('qwikAppData', _.bind(function(data) {
+				if( ! _.isEmpty(data)) {
+					var storedData = _.has(data, 'qwikAppData') ? JSON.parse(data.qwikAppData) : {};
+					_.each(storedData, function(v, i){
+						if(_.has(this.qwikAppData, i)) {
+							this.qwikAppData[i] = v;
+						}
+					}, this);
+					this.showLabels();
+				} else if(_.has(this, 'qwikAppData')) {
+					chrome.storage.sync.set({'qwikAppData': JSON.stringify(this.qwikAppData)});
+				}
+			}, this));
 		},
 		creatElement: function(str, params, data) {
-			if(typeof str === 'string' && str !== '') {
-				var elem = document.createElement(str);
-				var attrs = typeof params === typeof {} && _.size(params) > 0 ? params : {};
-				_.each(attrs, function(v, i){
-					var attr = document.createAttribute(i);
-					attr.value = v;
-					elem.setAttributeNode(attr);
-				});
-				if(data) {
-					return $('<' + elem + '>', $.extend({}, params)).text(data);
+			var elem = null;
+			if(_.isString(str) && ! _.isEmpty(str)) {
+				elem = $('<' + str + '>', $.extend({}, params));
+				if(_.isString(data) && ! _.isEmpty(data)) {
+					elem.text(data);
 				}
-				return $('<' + elem + '>', $.extend({}, params));
 			}
-			return null;
-		},
-		fadeInFadeOut: function(hide, show) {
-			if(hide && typeof hide === typeof 'string' && hide !== '') {
-				$(hide).fadeOut();
-			}
-			if(show && typeof show === typeof 'string' && show !== '') {
-				$(show).fadeIn();
-			}
-		},
-		init: function() {
-			document.getElementById('addLabel').addEventListener('click', function(){
-				$('.labels').fadeOut(function(){
-					qwikApp.addLabel();
-				});
-			});
-			document.getElementById('addLabelDetail').addEventListener('click', function(){
-				$('.labelDetails').fadeOut(function(){
-					qwikApp.addLabelDetail();
-				});
-			});
-			/*labels = document.getElementsByClassName('label');
-			for(var i = 0; i < labels.length; i++){
-				labels[i].addEventListener('mouseover', function(e) {
-					var liElm = e.target||e.srcElement;
-					var evt = e.fromElement || e.relatedTarget;
-					if (evt.parentNode == this || evt == this) return;
-					if(e.relatedTarget && e.relatedTarget === this) return;
-					liElm.children[1].style.display = 'block';
-				});
-				labels[i].addEventListener('mouseout', function(e) {
-					debugger;
-					var liElm = e.target||e.srcElement;
-					var evt = e.fromElement || e.relatedTarget;
-					if (evt.parentNode == this || evt == this) return;
-					if(e.relatedTarget && e.relatedTarget === this) return;
-					liElm.children[1].style.display = 'none';
-				});
-			}*/
-			/*$('.label, .labelDetail').on('mouseenter', _.bind(function(e){
-				$(e.currentTarget).find('.actions').show();
-			}, this)).on('mouseleave', _.bind(function(e){
-				$(e.currentTarget).find('.actions').hide();
-			}, this));*/
+			return elem;
 		}
 	};
-	document.addEventListener("DOMContentLoaded", function() {
-		qwikApp.init();
-	});
+	qwikApp.init();
 }(window.jQuery));
