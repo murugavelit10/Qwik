@@ -1,12 +1,12 @@
 {
 	"background": {
-		"scripts": ["scripts/app/bg.js"],
+		"scripts": ["vendors/jquery/1.11.3/jquery.min.js", "vendors/lodash/3.10.0/lodash.min.js", "scripts/app/bg.js"],
 		"persistent": false
 	},
 	"content_scripts": [
 		{
 			"all_frames": true,
-			"js": ["scripts/app/cs.js"],
+			"js": ["vendors/jquery/1.11.3/jquery.min.js", "vendors/lodash/3.10.0/lodash.min.js", "scripts/app/cs.js"],
 			"matches": [
 				"http://*/*",
 				"https://*/*"
@@ -15,7 +15,7 @@
 		},
 		{
 			"all_frames": false,
-			"js": ["scripts/app/cs.js"],
+			"js": ["vendors/jquery/1.11.3/jquery.min.js", "vendors/lodash/3.10.0/lodash.min.js", "scripts/app/cs.js"],
 			"matches": [
 				"http://*/*",
 				"https://*/*"

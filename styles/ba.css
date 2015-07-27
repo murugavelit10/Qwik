@@ -18,6 +18,7 @@ img{border:0}
 .show{display:block}
 .no-border{border:0}
 .m-top-3{margin-top:3px}
+.m-left-10{margin-left:10px}
 
 /* buttons */
 .btn{
@@ -84,7 +85,7 @@ header{
 	margin: 5px;
 	background-size: 32px;
 }
-.labels, .labelDetails{
+.labels, .labelDetails, .addLabelForm, .addLabelDetailForm{
 	margin: 5px;
 }
 .labelHeading, .labelDetailHeading{
@@ -119,11 +120,13 @@ header{
 	/*cursor: pointer;*/
 }
 .label:first-child, .labelDetail:first-child{
-	border-radius: 5px 5px 0px 0px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 .label:last-child, .labelDetail:last-child{
 	border: 0;
-	border-radius: 0px 0px 5px 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 /*.label:hover, .labelDetail:hover{
 	background: #294E77;
@@ -134,15 +137,21 @@ header{
 .label/* .labelText*/:hover, .labelDetail/* .labelText*/:hover{
 	color: #00366c;
 }
+.no-label{
+	color: #f00;
+}
 .copyright {
 	font: 400 12px/16px 'Bree Serif', Arial, Helvetica, sans-serif;
 	text-align: center;
 }
 
 /* form */
+.field{
+	margin: 5px 0;
+}
 .field input[type=text], .field input[type=password] {
 	border: 1px solid #ccc;
-	border-radius: 5px;
+	border-radius: 0;
 	margin: 0;
 	padding: 5px;
 	font: 400 13px/16px 'Crete Round', Arial, Helvetica, sans-serif;
