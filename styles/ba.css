@@ -9,16 +9,18 @@ font-family: 'Kaushan Script', cursive;
 */
 
 /* common styles */
-a{text-decoration:none}
-img{border:0}
-.clearfix{clear:both}
-.fl{float:left}
-.fr{float:right}
-.hide, .hidden{display:none}
-.show{display:block}
-.no-border{border:0}
-.m-top-3{margin-top:3px}
-.m-left-10{margin-left:10px}
+a{text-decoration:none !important}
+img{border:0 !important}
+.clearfix{clear:both !important}
+.fl{float:left !important}
+.fr{float:right !important}
+.hide, .hidden{display:none !important}
+.show{display:block !important}
+.no-border{border:0 !important}
+.m-top-3{margin-top:3px !important}
+.m-left-10{margin-left:10px !important}
+.m-top-5{margin-top:5px}
+.w-100{width:100px !important}
 
 /* buttons */
 .btn{
@@ -67,7 +69,7 @@ body{
 	margin: 0;
 	padding: 0;
 	font: 400 14px/18px 'Crete Round', Helvetica, Arial, sans-serif;
-	min-width: 300px;
+	min-width: 400px;
 }
 header{
 	margin: 0 0 5px 0;
@@ -149,12 +151,15 @@ header{
 .field{
 	margin: 5px 0;
 }
-.field input[type=text], .field input[type=password] {
+.field input[type=text], .field input[type=password], .field select {
 	border: 1px solid #ccc;
 	border-radius: 0;
 	margin: 0;
 	padding: 5px;
 	font: 400 13px/16px 'Crete Round', Arial, Helvetica, sans-serif;
+}
+.field select {
+	padding: 4px;
 }
 .field input[type=text]:focus, .field input[type=password]:focus, .field input[type=checkbox]:focus, .field input[type=radio]:focus, .field textarea:focus, .field select:focus {
 	outline: none;

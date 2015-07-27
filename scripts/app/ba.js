@@ -28,7 +28,9 @@
 			labels: [],
 			deletedLabels: [],
 			labelDetails: {},
-			deletedLabelDetails: {}
+			deletedLabelDetails: {},
+			currentLabel: {},
+			currentLabelDetail: {}
 		},
 		getUserData : function() {
 			this.syncChromeStorage('get', 'qwikAppData', _.bind(function(data) {
@@ -52,13 +54,13 @@
 				_.each(this.qwikAppData.labels, function(v, i){
 					var id = v.id;
 					var name = v.name;
-					var li = this.creatElement('li', {class: 'label'});
-					var labelText = this.creatElement('div', {class: 'labelText fl m-top-3', 'data-id': id}, name);
-					var actions = this.creatElement('div', {class: 'actions fr', 'style': 'display:none'});
-					var editIcon = this.creatElement('div', {class: 'edit btn fa fw fa-pencil fl', 'data-id': id});
-					var deleteIcon = this.creatElement('div', {class: 'delete btn error fa fw fa-trash fl', 'data-id': id, 'style': 'margin-left:10px'});
-					actions.append(editIcon, deleteIcon, this.creatElement('div', {class: 'clearfix'}));
-					li.append(labelText, actions, this.creatElement('div', {class: 'clearfix'}));
+					var li = this.makeElement('li', {class: 'label'});
+					var labelText = this.makeElement('div', {class: 'labelText fl m-top-3', 'data-id': id}, name);
+					var actions = this.makeElement('div', {class: 'actions fr', 'style': 'display:none'});
+					var editIcon = this.makeElement('div', {class: 'edit btn fa fw fa-pencil fl', 'data-id': id});
+					var deleteIcon = this.makeElement('div', {class: 'delete btn error m-left-10 fa fw fa-trash fl', 'data-id': id});
+					actions.append(editIcon, deleteIcon, this.makeElement('div', {class: 'clearfix'}));
+					li.append(labelText, actions, this.makeElement('div', {class: 'clearfix'}));
 					labelsList.append(li);
 				}, this);
 				this.attachActionEvents($('.label'));
@@ -90,45 +92,45 @@
 						this.setQwikAppData();
 						currentLabel.remove();
 						if(labelsList.find('li').length <= 0) {
-							labelsList.append(this.creatElement('li', {class: 'no-label'}, 'Oops! Labels not available.'));
+							labelsList.append(this.makeElement('li', {class: 'no-label'}, 'Oops! Labels not available.'));
 						}
 					}
 				}, this));
 			} else {
-				labelsList.append(this.creatElement('li', {class: 'no-label'}, 'Oops! Labels not available.'));
+				labelsList.append(this.makeElement('li', {class: 'no-label'}, 'Oops! Labels not available.'));
 			}
 		},
 		addLabel : function() {
 			var addLabelForm = $('.addLabelForm');
 			/* clean div content before appding elements */
 			addLabelForm.html('');
-			var addLabelHeading = this.creatElement('div', {class: 'labelHeading'}, 'Add Label');
+			var addLabelHeading = this.makeElement('div', {class: 'labelHeading'}, 'Add Label');
 			addLabelForm.append(addLabelHeading);
 			/* Name */
-			var field1 = this.creatElement('div', {class: 'field'});
-			var label1 = '';//this.creatElement('label', {for: 'labelName'}, 'Name');
-			var input1 = this.creatElement('input', {type: 'text', name: 'labelName', id: 'labelName', value: '', autocomplete: 'off', placeholder: 'Name'});
+			var field1 = this.makeElement('div', {class: 'field'});
+			var label1 = '';//this.makeElement('label', {for: 'labelName'}, 'Name');
+			var input1 = this.makeElement('input', {type: 'text', name: 'labelName', id: 'labelName', value: '', autocomplete: 'off', placeholder: 'Name'});
 			field1.append(label1, input1);
 			/* Is Visible */
-			/*var field2 = this.creatElement('div', {class: 'field'});
-			var label2 = this.creatElement('label', {for: 'labelIsVisible'}, 'Is Visible');
-			var input2 = this.creatElement('input', {type: 'checkbox', name: 'labelIsVisible', id: 'labelIsVisible'});
+			/*var field2 = this.makeElement('div', {class: 'field'});
+			var label2 = this.makeElement('label', {for: 'labelIsVisible'}, 'Is Visible');
+			var input2 = this.makeElement('input', {type: 'checkbox', name: 'labelIsVisible', id: 'labelIsVisible'});
 			field2.append(label2, input2);*/
 			/* Is Disabled */
-			/*var field3 = this.creatElement('div', {class: 'field'});
-			var label3 = this.creatElement('label', {for: 'labelIsDisabled'}, 'Is Disabled');
-			var input3 = this.creatElement('input', {type: 'checkbox', name: 'labelIsDisabled', id: 'labelIsDisabled'});
+			/*var field3 = this.makeElement('div', {class: 'field'});
+			var label3 = this.makeElement('label', {for: 'labelIsDisabled'}, 'Is Disabled');
+			var input3 = this.makeElement('input', {type: 'checkbox', name: 'labelIsDisabled', id: 'labelIsDisabled'});
 			field3.append(label3, input3);*/
 			/* Position */
-			/*var field4 = this.creatElement('div', {class: 'field'});
-			var label4 = '';//this.creatElement('label', {for: 'labelPosition'}, 'Position');
-			var input4 = this.creatElement('input', {type: 'number', name: 'labelPosition', id: 'labelPosition', value: '0', autocomplete: 'off', placeholder: 'Position', step: 1, min: 0, max: 99, maxlenth: 2});
+			/*var field4 = this.makeElement('div', {class: 'field'});
+			var label4 = '';//this.makeElement('label', {for: 'labelPosition'}, 'Position');
+			var input4 = this.makeElement('input', {type: 'number', name: 'labelPosition', id: 'labelPosition', value: '0', autocomplete: 'off', placeholder: 'Position', step: 1, min: 0, max: 99, maxlenth: 2});
 			field4.append(label4, input4);*/
 			/* action buttons */
-			var field5 = this.creatElement('div', {class: 'field'});
-			var save = this.creatElement('button', {name: 'addLabelSave', 'id': 'addLabelSave', class: 'fl btn success'}, 'Save');
-			var cancel = this.creatElement('button', {name: 'addLabelCancel', 'id': 'addLabelCancel', class: 'fl btn error', style: 'margin-left:10px'}, 'Cancel');
-			field5.append(save, cancel, this.creatElement('div', {class: 'clearfix'}));
+			var field5 = this.makeElement('div', {class: 'field'});
+			var save = this.makeElement('button', {name: 'addLabelSave', 'id': 'addLabelSave', class: 'fl btn success'}, 'Save');
+			var cancel = this.makeElement('button', {name: 'addLabelCancel', 'id': 'addLabelCancel', class: 'btn error m-left-10 fl'}, 'Cancel');
+			field5.append(save, cancel, this.makeElement('div', {class: 'clearfix'}));
 			addLabelForm.append(field1, /*field2, field3, field4,*/ field5);
 			addLabelForm.find('#addLabelSave').on('click', _.bind(function() {
 				var labelName = $.trim($('#labelName').val());
@@ -146,7 +148,7 @@
 					});
 					this.setQwikAppData();
 					addLabelForm.fadeOut(_.bind(function(){
-						$('.labelsList').html(this.creatElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
+						$('.labelsList').html(this.makeElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
 						$('.labels').fadeIn();
 						this.showLabels();
 					}, this));
@@ -156,7 +158,7 @@
 			}, this));
 			addLabelForm.find('#addLabelCancel').on('click', _.bind(function() {
 				addLabelForm.fadeOut(_.bind(function() {
-					$('.labelsList').html(this.creatElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
+					$('.labelsList').html(this.makeElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
 					$('.labels').fadeIn();
 					this.showLabels();
 				}, this));
@@ -167,38 +169,38 @@
 			var addLabelForm = $('.addLabelForm');
 			/* clean div content before appding elements */
 			addLabelForm.html('');
-			var addLabelHeading = this.creatElement('div', {class: 'labelHeading'}, 'Edit Label');
+			var addLabelHeading = this.makeElement('div', {class: 'labelHeading'}, 'Edit Label');
 			addLabelForm.append(addLabelHeading);
 			/* Name */
-			var field1 = this.creatElement('div', {class: 'field'});
-			var label1 = '';//this.creatElement('label', {for: 'labelName'}, 'Name');
-			var input1 = this.creatElement('input', {type: 'text', name: 'labelName', id: 'labelName', value: label.name, autocomplete: 'off', placeholder: 'Name'});
+			var field1 = this.makeElement('div', {class: 'field'});
+			var label1 = '';//this.makeElement('label', {for: 'labelName'}, 'Name');
+			var input1 = this.makeElement('input', {type: 'text', name: 'labelName', id: 'labelName', value: label.name, autocomplete: 'off', placeholder: 'Name'});
 			field1.append(label1, input1);
 			/* Is Visible */
-			/*var field2 = this.creatElement('div', {class: 'field'});
-			var label2 = this.creatElement('label', {for: 'labelIsVisible'}, 'Is Visible');
-			var input2 = this.creatElement('input', {type: 'checkbox', name: 'labelIsVisible', id: 'labelIsVisible'});
+			/*var field2 = this.makeElement('div', {class: 'field'});
+			var label2 = this.makeElement('label', {for: 'labelIsVisible'}, 'Is Visible');
+			var input2 = this.makeElement('input', {type: 'checkbox', name: 'labelIsVisible', id: 'labelIsVisible'});
 			field2.append(label2, input2);*/
 			/* Is Disabled */
-			/*var field3 = this.creatElement('div', {class: 'field'});
-			var label3 = this.creatElement('label', {for: 'labelIsDisabled'}, 'Is Disabled');
-			var input3 = this.creatElement('input', {type: 'checkbox', name: 'labelIsDisabled', id: 'labelIsDisabled'});
+			/*var field3 = this.makeElement('div', {class: 'field'});
+			var label3 = this.makeElement('label', {for: 'labelIsDisabled'}, 'Is Disabled');
+			var input3 = this.makeElement('input', {type: 'checkbox', name: 'labelIsDisabled', id: 'labelIsDisabled'});
 			field3.append(label3, input3);*/
 			/* Position */
-			/*var field4 = this.creatElement('div', {class: 'field'});
-			var label4 = '';//this.creatElement('label', {for: 'labelPosition'}, 'Position');
-			var input4 = this.creatElement('input', {type: 'number', name: 'labelPosition', id: 'labelPosition', value: '0', autocomplete: 'off', placeholder: 'Position', step: 1, min: 0, max: 99, maxlenth: 2});
+			/*var field4 = this.makeElement('div', {class: 'field'});
+			var label4 = '';//this.makeElement('label', {for: 'labelPosition'}, 'Position');
+			var input4 = this.makeElement('input', {type: 'number', name: 'labelPosition', id: 'labelPosition', value: '0', autocomplete: 'off', placeholder: 'Position', step: 1, min: 0, max: 99, maxlenth: 2});
 			field4.append(label4, input4);*/
 			/* action buttons */
-			var field5 = this.creatElement('div', {class: 'field'});
-			var save = this.creatElement('button', {name: 'editLabelSave', 'id': 'editLabelSave', class: 'fl btn success'}, 'Save');
-			var cancel = this.creatElement('button', {name: 'editLabelCancel', 'id': 'editLabelCancel', class: 'fl btn error', style: 'margin-left:10px'}, 'Cancel');
-			field5.append(save, cancel, this.creatElement('div', {class: 'clearfix'}));
+			var field5 = this.makeElement('div', {class: 'field'});
+			var save = this.makeElement('button', {name: 'editLabelSave', 'id': 'editLabelSave', class: 'fl btn success'}, 'Save');
+			var cancel = this.makeElement('button', {name: 'editLabelCancel', 'id': 'editLabelCancel', class: 'btn error m-left-10 fl'}, 'Cancel');
+			field5.append(save, cancel, this.makeElement('div', {class: 'clearfix'}));
 			addLabelForm.append(field1, /*field2, field3, field4,*/ field5);
 			addLabelForm.find('#editLabelSave').on('click', _.bind(function() {
 				var labelName = $.trim($('#labelName').val());
 				var duplicateLabel = _.findIndex(this.qwikAppData.labels, function(labelData){
-					return label.id !== labelData.id && label.name === labelData.name;
+					return label.id !== labelData.id && labelName === labelData.name;
 				});
 				var labelIndex = _.findIndex(this.qwikAppData.labels, function(labelData){
 					return label.id === labelData.id;
@@ -207,7 +209,7 @@
 					this.qwikAppData.labels[labelIndex].name = labelName;
 					this.setQwikAppData();
 					addLabelForm.fadeOut(_.bind(function(){
-						$('.labelsList').html(this.creatElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
+						$('.labelsList').html(this.makeElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
 						$('.labels').fadeIn();
 						this.showLabels();
 					}, this));
@@ -217,86 +219,155 @@
 			}, this));
 			addLabelForm.find('#editLabelCancel').on('click', _.bind(function() {
 				addLabelForm.fadeOut(_.bind(function() {
-					$('.labelsList').html(this.creatElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
+					$('.labelsList').html(this.makeElement('li', {class: 'no-label'}, 'Loading labels... Please Wait...'));
 					$('.labels').fadeIn();
 					this.showLabels();
 				}, this));
 			}, this));
 			addLabelForm.fadeIn();
 		},
-		showLabelDetails : function(labelId, labelName) {
+		showLabelDetails : function(label) {
 			var labelDetailsList = $('.labelDetailsList');
-			$('.labelDetailHeading').html('').text(labelName);
+			$('.labelDetailHeading').html('').text(label.name);
 			labelDetailsList.html('');
-			if(_.has(this.qwikAppData, 'labelDetails') && _.has(this.qwikAppData.labelDetails, labelName) && _.size(this.qwikAppData.labelDetails[labelName]) > 0) {
-				_.each(this.qwikAppData.labelDetails[labelName], function(v, i){
-					var id = v.id;
-					var name = v.name;
-					var li = this.creatElement('li', {class: 'labelDetail'});
-					var labelText = this.creatElement('div', {class: 'labelText fl m-top-3', 'data-id': id}, name);
-					var actions = this.creatElement('div', {class: 'actions fr', 'style': 'display:none'});
-					var editIcon = this.creatElement('div', {class: 'edit btn fa fw fa-pencil fl'});
-					var deleteIcon = this.creatElement('div', {class: 'delete btn error fa fw fa-trash fl', 'style': 'margin-left:10px'});
-					actions.append(editIcon, deleteIcon, this.creatElement('div', {class: 'clearfix'}));
-					li.append(labelText, actions, this.creatElement('div', {class: 'clearfix'}));
+			if(_.has(this.qwikAppData, 'labelDetails') && _.has(this.qwikAppData.labelDetails, label.id) && _.size(this.qwikAppData.labelDetails[label.id]) > 0) {
+				_.each(this.qwikAppData.labelDetails[label.id], function(v, i){
+					var li = this.makeElement('li', {class: 'labelDetail'});
+					var labelText = this.makeElement('div', {class: 'labelText fl m-top-3', 'data-id': v.id, 'data-label-id': label.id}, v.name);
+					var actions = this.makeElement('div', {class: 'actions fr', 'style': 'display:none'});
+					var editIcon = this.makeElement('div', {class: 'edit btn fa fw fa-pencil fl', 'data-id': v.id, 'data-label-id': label.id});
+					var deleteIcon = this.makeElement('div', {class: 'delete btn error m-left-10 fa fw fa-trash fl', 'data-id': v.id, 'data-label-id': label.id});
+					actions.append(editIcon, deleteIcon, this.makeElement('div', {class: 'clearfix'}));
+					li.append(labelText, actions, this.makeElement('div', {class: 'clearfix'}));
 					labelDetailsList.append(li);
 				}, this);
 			} else {
-				var li = this.creatElement('li', {class: 'no-label'}, 'Oops! Label Details not available.');
-				labelDetailsList.append(li);
+				labelDetailsList.append(this.makeElement('li', {class: 'no-label'}, 'Oops! Label Details not available.'));
 			}
 			this.attachActionEvents($('.labelDetail'));
+			$('.labelDetail').on('click', '.labelText', _.bind(function(e) {
+				e.preventDefault();
+				var cTarget = $(e.currentTarget);
+				var labelId = cTarget.attr('data-label-id');
+				var labelDetailId = cTarget.attr('data-id');
+				var labelDetail = _.findWhere(this.qwikAppData.labelDetails[labelId], {'id': Number(LabelDetailId)});
+				if( ! _.isUndefined(labelDetail)) {
+					chrome.tabs.create({
+						url: labelDetail.URL
+					}, function(tab) {
+						this.syncChromeStorage('set', 'qwikAppTab', tab);
+					});
+					this.syncChromeStorage('set', 'qwkiAppSelectedLabel', JSON.stringify(label));
+					this.syncChromeStorage('set', 'qwkiAppSelectedLabelDetail', JSON.stringify(labelDetail));
+				}
+			}, this)).on('click', '.edit', _.bind(function(e){
+				e.preventDefault();
+				var cTarget = $(e.currentTarget);
+				var labelId = cTarget.attr('data-label-id');
+				var labelDetailId = cTarget.attr('data-id');
+				var labelDetail = _.findWhere(this.qwikAppData.labelDetails[labelId], {'id': Number(labelDetailId)});
+				if( ! _.isUndefined(label)) {
+					$('.labelDetails').fadeOut(_.bind(function(){
+						this.editLabelDetail(labelDetail);
+					}, this));
+				}
+			}, this)).on('click', '.delete', _.bind(function(e){
+				e.preventDefault();
+				var cTarget = $(e.currentTarget);
+				var labelId = cTarget.attr('data-label-id');
+				var labelDetailId = cTarget.attr('data-id');
+				var currentLabelDetail = cTarget.parents('li');
+				if(confirm('Do you want to delete ' + currentLabelDetail.find('.labelText').text() + '?')) {
+					var labelDetails = _.filter(this.qwikAppData.labelDetails[labelId], function(labelDetail){
+						return labelDetail.id !== Number(labelDetailId);
+					});
+					this.qwikAppData.labelDetails[labelId] = labelDetails;
+					this.setQwikAppData();
+					currentLabelDetail.remove();
+					if(labelDetailsList.find('li').length <= 0) {
+						labelDetailsList.append(this.makeElement('li', {class: 'no-label'}, 'Oops! Label Details not available.'));
+					}
+				}
+			}, this));
 			$('.labelDetails').fadeIn();
 		},
 		addLabelDetail: function () {
 			var addLabelDetailForm = $('.addLabelDetailForm');
 			/* clean div content before appding elements */
 			addLabelDetailForm.html('');
-			var addLabelHeading = this.creatElement('div', {class: 'labelDetailHeading'}, 'Add Label Detail');
+			var addLabelHeading = this.makeElement('div', {class: 'labelDetailHeading'}, 'Add Label Detail');
 			addLabelDetailForm.append(addLabelHeading);
 			/* Name */
-			var field1 = this.creatElement('div', {class: 'field'});
-			var label1 = this.creatElement('label', {for: 'labelDetailName'}, 'Name');
-			var input1 = this.creatElement('input', {type: 'text', name: 'labelDetailName', id: 'labelDetailName', value: '', autocomplete: 'off'});
-			field1.append(label1, input1);
+			var field1 = this.makeElement('div', {class: 'field'});
+			var label1 = '';//this.makeElement('label', {for: 'labelDetailName'}, 'Name');
+			var input1 = this.makeElement('input', {type: 'text', class: 'fl', name: 'labelDetailName', id: 'labelDetailName', value: '', autocomplete: 'off', placeholder: 'Name'});
+			var input11 = this.makeElement('input', {type: 'text', class: 'm-left-10 fl', name: 'labelDetailUrl', id: 'labelDetailUrl', value: '', autocomplete: 'off', placeholder: 'URL'});
+			field1.append(label1, input1, input11, this.makeElement('div', {class: 'clearfix'}));
 			/* Is Visible */
-			var field2 = this.creatElement('div', {class: 'field'});
-			var label2 = this.creatElement('label', {for: 'labelDetailIsVisible'}, 'Is Visible');
-			var input2 = this.creatElement('input', {type: 'checkbox', name: 'labelDetailIsVisible', id: 'labelDetailIsVisible'});
-			field2.append(label2, input2);
+			/*var field2 = this.makeElement('div', {class: 'field'});
+			var label2 = this.makeElement('label', {for: 'labelDetailIsVisible'}, 'Is Visible');
+			var input2 = this.makeElement('input', {type: 'checkbox', name: 'labelDetailIsVisible', id: 'labelDetailIsVisible'});
+			field2.append(label2, input2);*/
 			/* Is Disabled */
-			var field3 = this.creatElement('div', {class: 'field'});
-			var label3 = this.creatElement('label', {for: 'labelDetailIsDisabled'}, 'Is Disabled');
-			var input3 = this.creatElement('input', {type: 'checkbox', name: 'labelDetailIsDisabled', id: 'labelDetailIsDisabled'});
-			field3.append(label3, input3);
+			/*var field3 = this.makeElement('div', {class: 'field'});
+			var label3 = this.makeElement('label', {for: 'labelDetailIsDisabled'}, 'Is Disabled');
+			var input3 = this.makeElement('input', {type: 'checkbox', name: 'labelDetailIsDisabled', id: 'labelDetailIsDisabled'});
+			field3.append(label3, input3);*/
 			/* Position */
-			var field4 = this.creatElement('div', {class: 'field'});
-			var label4 = this.creatElement('label', {for: 'labelDetailPosition'}, 'Position');
-			var input4 = this.creatElement('input', {type: 'text', name: 'labelDetailPosition', id: 'labelDetailPosition', value: '', autocomplete: 'off'});
-			field4.append(label4, input4);
+			/*var field4 = this.makeElement('div', {class: 'field'});
+			var label4 = this.makeElement('label', {for: 'labelDetailPosition'}, 'Position');
+			var input4 = this.makeElement('input', {type: 'text', name: 'labelDetailPosition', id: 'labelDetailPosition', value: '', autocomplete: 'off'});
+			field4.append(label4, input4);*/
 			/* inputs */
-			var field5 = this.creatElement('div', {class: 'field'});
-			var label5 = this.creatElement('label', {for: 'labelDetailInpytType', class: 'fl'}, 'Inputs:');
-			var addInputDiv = this.creatElement('div', {class: 'addInput fr'});
-			var inputTypeLabel = this.creatElement('label', {for: 'labelDetailInpytType', class: 'fl'}, 'Type');
-			var selectInputType = this.creatElement('select', {class: 'fl', name: 'labelDetailInpytType', id: 'labelDetailInpytType', style: 'margin-left:10px'});
-			selectInputType
-				.append(this.creatElement('option', {value: 'text'}, 'Text Box'))
-				.append(this.creatElement('option', {value: 'password'}, 'Password'))
-				.append(this.creatElement('option', {value: 'textarea'}, 'Textarea'))
-				.append(this.creatElement('option', {value: 'checkbox'}, 'Checkbox'))
-				.append(this.creatElement('option', {value: 'radio'}, 'Radio'))
-				.append(this.creatElement('option', {value: 'dropdownbox'}, 'Dropdown Box'));
-			var addInputBtn = this.creatElement('button', {class: 'btn success fl', name: 'addInputBtn', id: 'addInputBtn', style: 'margin-left:10px', type: 'button'}, 'Add Input');
-			addInputDiv.append(inputTypeLabel, selectInputType, addInputBtn, this.creatElement('div', {class: 'clearfix'}));
-			field5.append(label5, addInputDiv, this.creatElement('div', {class: 'clearfix'}));
+			var field5 = this.makeElement('div', {class: 'field'});
+			var label5 = this.makeElement('label', {for: 'labelDetailInpytType', class: 'fl'}, 'Inputs:');
+			var addInputDiv = this.makeElement('div', {class: 'addInput fr'});
+			var addInputBtn = this.makeElement('button', {class: 'btn success m-left-10 fl', name: 'addInputBtn', id: 'addInputBtn', type: 'button'}, 'Add Input');
+			addInputDiv.append(addInputBtn, this.makeElement('div', {class: 'clearfix'}));
+			field5.append(label5, addInputDiv, this.makeElement('div', {class: 'clearfix'}));
 
 			/* action buttons */
-			var field6 = this.creatElement('div', {class: 'field'});
-			var save = this.creatElement('button', {name: 'addLabelDetailSave', 'id': 'addLabelDetailSave', class: 'fl btn success', type: 'button'}, 'Save');
-			var cancel = this.creatElement('button', {name: 'addLabelDetailCancel', 'id': 'addLabelDetailCancel', class: 'fl btn error', style: 'margin-left:10px', type: 'button'}, 'Cancel');
-			field6.append(save, cancel, this.creatElement('div', {class: 'clearfix'}));
-			addLabelDetailForm.append(field1, field2, field3, field4, field5, field6).fadeIn();
+			var field6 = this.makeElement('div', {class: 'field'});
+			var save = this.makeElement('button', {name: 'addLabelDetailSave', 'id': 'addLabelDetailSave', class: 'fl btn success', type: 'button'}, 'Save');
+			var cancel = this.makeElement('button', {name: 'addLabelDetailCancel', 'id': 'addLabelDetailCancel', class: 'btn error m-left-10 fl', type: 'button'}, 'Cancel');
+			field6.append(save, cancel, this.makeElement('div', {class: 'clearfix'}));
+			addLabelDetailForm.append(field1, /*field2, field3, field4,*/ field5, field6).fadeIn();
+			var inputCount = 0;
+			var maxInputCount = 5;
+			addLabelDetailForm.find('#addInputBtn').on('click', _.bind(function(e) {
+				e.preventDefault();
+				if(inputCount === maxInputCount) return false;
+				inputCount++;
+				var field = this.makeElement('div', {class: 'field'});
+				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', placeholder: 'selector'});
+				var inputType = this.makeElement('select', {class: 'inputCol w-100 m-left-10 fl', name: 'inpytType'});
+				inputType
+					.append(this.makeElement('option', {value: 'text'}, 'Text Box'))
+					.append(this.makeElement('option', {value: 'password'}, 'Password'))
+					.append(this.makeElement('option', {value: 'textarea'}, 'Textarea'))
+					.append(this.makeElement('option', {value: 'checkbox'}, 'Checkbox'))
+					.append(this.makeElement('option', {value: 'radio'}, 'Radio'))
+					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'));
+				var value = this.makeElement('input', {type: 'text', class: 'inputCol w-100 m-left-10 fl', name: 'value', placeholder: 'value'});
+				var deleteBtn = this.makeElement('div', {class: 'inputCol btn error delete m-left-10 m-top-5 fa fw fa-trash fl'});
+				field.append(selector, inputType, value, deleteBtn, this.makeElement('div', {class: 'clearfix'}));
+				$(field).insertBefore(addLabelDetailForm.find('.field:last'));
+				deleteBtn.on('click', function(e) {
+					e.preventDefault();
+					var cTarget = $(e.currentTarget);
+					var currentInputRow = cTarget.parents('.field');
+					if(confirm('Do you want to delete this input?')) {
+						inputCount--;
+						if(inputCount < maxInputCount) {
+							$('#addInputBtn').show();
+						}
+						currentInputRow.remove();
+					}
+				});
+				if(inputCount === maxInputCount) {
+					$('#addInputBtn').hide();
+				}
+			}, this));
 			addLabelDetailForm.find('#addLabelDetailSave').on('click', function() {
 				alert('add label save clicked!');
 			});
@@ -306,7 +377,7 @@
 				});
 			}, this));
 		},
-		creatElement: function(str, params, data) {
+		makeElement: function(str, params, data) {
 			var elem = null;
 			if(_.isString(str) && ! _.isEmpty(str)) {
 				elem = $('<' + str + '>', $.extend({}, params));
@@ -331,9 +402,9 @@
 				if(type === 'set') {
 					var obj = {};
 					obj[key] = value;
-					chrome.storage.sync.set(obj);
+					chrome.storage.local.set(obj);
 				} else if(type === 'get' && _.isFunction(value)) {
-					chrome.storage.sync.get(key, value)
+					chrome.storage.local.get(key, value)
 				}
 			}
 		}
