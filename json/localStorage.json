@@ -21,7 +21,7 @@
 	],
 	"deletedLabels": [],
 	"labelDetails": {
-		"WKSC": [
+		"1": [
 			{
 				"labelId": 1,
 				"name": "Hudson-WksActivities",
@@ -51,7 +51,7 @@
 				"nextUrl": "https://build.bansel.it/hudson/view/EAR builds/job/EAR-WksActivities"
 			}
 		],
-		"H2O": [
+		"2": [
 			{
 				"labelId": 1,
 				"name": "TEST-WKSC",
