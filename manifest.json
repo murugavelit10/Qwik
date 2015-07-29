@@ -43,6 +43,7 @@
 		"http://*/*",
 		"https://*/*",
 		"contextMenus",
+		"activeTab",
 		"tabs",
 		"idle",
 		"webRequestBlocking",
