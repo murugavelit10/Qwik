@@ -265,11 +265,36 @@
 				if( ! _.isUndefined(labelDetail)) {
 					this.syncChromeStorage('set', 'qwkiAppSelectedLabel', JSON.stringify(label));
 					this.syncChromeStorage('set', 'qwkiAppSelectedLabelDetail', JSON.stringify(labelDetail));
-					chrome.tabs.create({
-						url: labelDetail.url
-					}, _.bind(function(tab) {
-						this.syncChromeStorage('set', 'qwikAppTab', tab);
-					}, this));
+					var storeTabDetailsCb = _.bind(function(tab){
+						this.syncChromeStorage('set', 'qwkiAppTab', JSON.stringify(tab));
+					}, this);
+					var openUrlCb = _.bind(function(activeTab, isEachCb){
+						if(_.contains(activeTab.url, 'chrome://newtab') || _.contains(labelDetail.url, _.trim(activeTab.url))){
+							chrome.tabs.update(activeTab.id, {
+								url: labelDetail.url,
+								active: true,
+								highlighted: true
+							}, function(tab){
+								storeTabDetailsCb(tab);
+							});
+						} else {
+							chrome.tabs.create({
+								url: labelDetail.url,
+								active: true
+							}, storeTabDetailsCb);
+						}
+						if(isEachCb) return false;
+					}, this);
+					chrome.tabs.query({active: true}, function(tabs){
+						if(_.size(tabs) === 1) {
+							openUrlCb(tabs, false);
+						} else {
+							_.each(tabs, function(tab, i){
+								var retVal = openUrlCb(tab, true);
+								return retVal;
+							});
+						}
+					});
 				}
 			}, this)).on('click', '.edit', _.bind(function(e){
 				e.preventDefault();
