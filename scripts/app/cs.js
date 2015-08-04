@@ -12,11 +12,15 @@ document.addEventListener("DOMContentLoaded", function() {
 				qwikApp.tabDetail = _.has(data, 'qwikAppTab') ? JSON.parse(data.qwikAppTab) : {};
 				if(_.size(qwikApp.selectedLabel) > 0 && _.size(qwikApp.selectedLabelDetail) > 0 && _.size(qwikApp.tabDetail) > 0) {
 					if(window.location.href === qwikApp.selectedLabelDetail.url) {
+						chrome.storage.local.set({'qwikAppTabAuth': false});
+						if( ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
+							chrome.storage.local.set({'qwikAppTabRedirect': false});
+						}
 						var needToBeSubmitted = false, submitSelector = null, isForm = null;
 						_.each(qwikApp.selectedLabelDetail.inputs, function(input, i){
 							if( ! _.isEmpty(input.selector) && _.size($(input.selector)) > 0) {
-								needToBeSubmitted = true;
 								if(submitSelector === null){
+									needToBeSubmitted = true;
 									var hasForm = $(input.selector).parents('form');
 									if(_.size(hasForm) > 0) {
 										submitSelector = $(hasForm);
@@ -31,6 +35,11 @@ document.addEventListener("DOMContentLoaded", function() {
 								} else {
 									$(input.selector).val(input.value);
 								}
+							} else {
+								if(confirm('Do you want to redirect to ' + qwikApp.selectedLabelDetail.redirectUrl + '?')) {
+									chrome.storage.local.remove(['qwikAppSelectedLabel', 'qwikAppSelectedLabelDetail', 'qwikAppTab', 'qwikAppTabAuth', 'qwikAppTabRedirect']);
+									window.location.href = qwikApp.selectedLabelDetail.redirectUrl;
+								}
 							}
 						});
 						if(needToBeSubmitted) {
@@ -38,7 +47,10 @@ document.addEventListener("DOMContentLoaded", function() {
 							console.log('submitSelector: ', submitSelector);
 							console.log('isForm: ', isForm);
 							if(isForm){
-								chrome.storage.local.set({'qwikAppNextProcess': ''});
+								chrome.storage.local.set({'qwikAppTabAuth': true});
+								if( ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
+									chrome.storage.local.set({'qwikAppTabRedirect': true});
+								}
 								$(submitSelector).submit();
 							}
 						}
