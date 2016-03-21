@@ -274,7 +274,8 @@
 					}, this);
 					if(this.currentActiveTabData !== null) {
 						_.each(this.currentActiveTabData, function(activeTab, i){
-							if(_.contains(activeTab.url, 'chrome://newtab') || _.contains(labelDetail.url, _.trim(activeTab.url))) {
+							var currLoc = getLocation(activeTab.url), chkLoc = getLocation(labelDetail.url);
+							if(_.contains(activeTab.url, 'chrome://newtab') || (currLoc.origin === chkLoc.origin && currLoc.pathname === chkLoc.pathname)) {
 								chrome.tabs.update(activeTab.id, {
 									url: labelDetail.url,
 									active: true,
@@ -715,6 +716,11 @@
 				}
 			}
 		}
+	};
+	var getLocation = function(href) {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
 	};
 	document.addEventListener("DOMContentLoaded", function() {
 		qwikApp.init();
