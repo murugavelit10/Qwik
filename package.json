@@ -1,0 +1,19 @@
+{
+  "name": "qwik",
+  "version": "1.0.0",
+  "description": "Qwik is a Google Chrome browser extension which extends the functionality of a bookmark tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/murugavelit10/Qwik.git"
+  },
+  "author": "Murugavel Namachivayam, Erode, Tamil Nadu, India.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/murugavelit10/Qwik/issues"
+  },
+  "homepage": "https://github.com/murugavelit10/Qwik#readme"
+}
