@@ -1,0 +1,1 @@
+/* Node will execute this file to initialize the application */

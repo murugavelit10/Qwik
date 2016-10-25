@@ -15,5 +15,27 @@
   "bugs": {
     "url": "https://github.com/murugavelit10/Qwik/issues"
   },
-  "homepage": "https://github.com/murugavelit10/Qwik#readme"
+  "homepage": "https://github.com/murugavelit10/Qwik#readme",
+  "devDependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
+    "angular-material": "^1.1.1",
+    "angular-route": "^1.5.8",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "requirejs": "^2.3.2",
+    "underscore": "^1.8.3"
+  },
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
+    "angular-material": "^1.1.1",
+    "angular-route": "^1.5.8",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "requirejs": "^2.3.2",
+    "underscore": "^1.8.3"
+  }
 }
