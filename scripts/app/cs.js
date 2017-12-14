@@ -53,7 +53,7 @@ function checkDataLoad() {
 			var needToBeSubmitted = false, submitSelector = null, isForm = null;
 			_.every(qwikApp.selectedLabelDetail.inputs, function(input, i){
 				if( ! _.isEmpty(input.selector) && _.size($(input.selector)) > 0) {
-					if(submitSelector === null){
+					if(submitSelector === null && isForm === null){
 						needToBeSubmitted = true;
 						var hasForm = $(input.selector).parents('form');
 						if(_.size(hasForm) > 0) {
@@ -62,6 +62,7 @@ function checkDataLoad() {
 						} else {
 							// TODO
 							// handle form submit if form not available
+							isForm = false;
 						}
 
 					}
@@ -72,7 +73,6 @@ function checkDataLoad() {
 					}
 				} else {
 					chrome.storage.local.get('qwikAppTabRedirect', function(data) {
-						debugger;
 						needRedirect = _.has(data, 'qwikAppTabRedirect') ? data.qwikAppTabRedirect : false;
 						if(needRedirect) {
 							doRedirect();
@@ -89,17 +89,24 @@ function checkDataLoad() {
 						chrome.storage.local.set({'qwikAppTabRedirect': true});
 					}
 					var submitBtn = $(submitSelector).find('[type=submit]');
-					if(submitBtn) {
+					if(submitBtn.length > 0) {
 						submitBtn.trigger('click');
 					} else {
 						$(submitSelector).submit();
 					}
+				} else {
+					// TODO
+					// handle the form submission when there is no form element present
 				}
-			} else if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
-				chrome.storage.local.set({'qwikAppTabRedirect': true});
-				// form no need to be submitted
-				// then try to redirect if redirect url is present
-				doRedirect();
+			} else {
+				if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
+					chrome.storage.local.set({'qwikAppTabRedirect': true});
+					// form no need to be submitted
+					// then try to redirect if redirect url is present
+					doRedirect();
+				} else {
+					chrome.storage.local.set({'qwikAppTabRedirect': false});
+				}
 			}
 		}
 	}
