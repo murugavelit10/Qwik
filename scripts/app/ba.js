@@ -377,7 +377,7 @@
 				if(inputCount === maxInputCount) return false;
 				inputCount++;
 				var field = this.makeElement('div', {class: 'field inputRow'});
-				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', placeholder: 'selector', maxlength: 100, title: 'Selector'});
+				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', placeholder: 'selector', maxlength: 200, title: 'Selector'});
 				var inputType = this.makeElement('select', {class: 'inputCol w-100 m-left-10 fl', name: 'inputType', title: 'Type'});
 				inputType
 					.append(this.makeElement('option', {value: 'text'}, 'Text Box'))
@@ -385,7 +385,8 @@
 					.append(this.makeElement('option', {value: 'textarea'}, 'Textarea'))
 					.append(this.makeElement('option', {value: 'checkbox'}, 'Checkbox'))
 					.append(this.makeElement('option', {value: 'radio'}, 'Radio'))
-					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'));
+					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'))
+					.append(this.makeElement('option', {value: 'submit'}, 'Submit Button'));
 				var inputValue = this.makeElement('input', {type: 'text', class: 'inputCol w-100 m-left-10 fl', name: 'inputValue', placeholder: 'value', maxlength: 100, title: 'Value'});
 				var deleteBtn = this.makeElement('div', {class: 'inputCol btn error delete m-left-10 m-top-5 fa fw fa-trash fl'});
 				field.append(selector, inputType, inputValue, deleteBtn, this.makeElement('div', {class: 'clearfix'}));
@@ -528,7 +529,7 @@
 				if(inputCount === maxInputCount) return false;
 				inputCount++;
 				var field = this.makeElement('div', {class: 'field inputRow'});
-				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', value: v.selector, placeholder: 'selector', maxlength: 100, title: 'Selector'});
+				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', value: v.selector, placeholder: 'selector', maxlength: 200, title: 'Selector'});
 				var inputType = this.makeElement('select', {class: 'inputCol w-100 m-left-10 fl', name: 'inputType', title: 'Type'});
 				inputType
 					.append(this.makeElement('option', {value: 'text'}, 'Text Box'))
@@ -536,7 +537,8 @@
 					.append(this.makeElement('option', {value: 'textarea'}, 'Textarea'))
 					.append(this.makeElement('option', {value: 'checkbox'}, 'Checkbox'))
 					.append(this.makeElement('option', {value: 'radio'}, 'Radio'))
-					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'));
+					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'))
+					.append(this.makeElement('option', {value: 'submit'}, 'Submit Button'));
 				inputType.val(v.type);
 				var inputValue = '';
 				if(v.type === 'checkbox' || v.type === 'radio') {
@@ -580,7 +582,7 @@
 				if(inputCount === maxInputCount) return false;
 				inputCount++;
 				var field = this.makeElement('div', {class: 'field inputRow'});
-				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', placeholder: 'selector', maxlength: 100});
+				var selector = this.makeElement('input', {type: 'text', class: 'inputCol w-100 fl', name: 'selector', placeholder: 'selector', maxlength: 200});
 				var inputType = this.makeElement('select', {class: 'inputCol w-100 m-left-10 fl', name: 'inputType'});
 				inputType
 					.append(this.makeElement('option', {value: 'text'}, 'Text Box'))
@@ -588,7 +590,8 @@
 					.append(this.makeElement('option', {value: 'textarea'}, 'Textarea'))
 					.append(this.makeElement('option', {value: 'checkbox'}, 'Checkbox'))
 					.append(this.makeElement('option', {value: 'radio'}, 'Radio'))
-					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'));
+					.append(this.makeElement('option', {value: 'select'}, 'Dropdown Box'))
+					.append(this.makeElement('option', {value: 'submit'}, 'Submit Button'));
 				var inputValue = this.makeElement('input', {type: 'text', class: 'inputCol w-100 m-left-10 fl', name: 'inputValue', placeholder: 'value', maxlength: 100});
 				var deleteBtn = this.makeElement('div', {class: 'inputCol btn error delete m-left-10 m-top-5 fa fw fa-trash fl', title: 'Delete Input'});
 				field.append(selector, inputType, inputValue, deleteBtn, this.makeElement('div', {class: 'clearfix'}));

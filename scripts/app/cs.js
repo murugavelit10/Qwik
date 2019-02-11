@@ -3,6 +3,9 @@ var getLocation = function(href) {
 	l.href = href;
 	return l;
 };
+var cleanValues = function() {
+	chrome.storage.local.remove(['qwikAppSelectedLabel', 'qwikAppSelectedLabelDetail', 'qwikAppTab', 'qwikAppTabAuth', 'qwikAppTabRedirect']);
+};
 var needRedirect = false;
 var qwikApp = {
 	selectedLabel: {},
@@ -24,7 +27,7 @@ chrome.storage.local.get('qwikAppTab', function(data) {
 });
 var doRedirect = function() {
 	if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
-		chrome.storage.local.remove(['qwikAppSelectedLabel', 'qwikAppSelectedLabelDetail', 'qwikAppTab', 'qwikAppTabAuth', 'qwikAppTabRedirect']);
+		cleanValues();
 		if(confirm('Do you want to redirect to "' + qwikApp.selectedLabelDetail.redirectUrl + '"?')) {
 			window.location.href = qwikApp.selectedLabelDetail.redirectUrl;
 		}
@@ -50,7 +53,7 @@ function checkDataLoad() {
 			chrome.storage.local.set({'qwikAppTabAuth': false});
 			// init qwikAppTabRedirect to false
 			chrome.storage.local.set({'qwikAppTabRedirect': false});
-			var needToBeSubmitted = false, submitSelector = null, isForm = null;
+			var needToBeSubmitted = false, submitSelector = null, submitBtnSelector = null, isForm = null;
 			_.every(qwikApp.selectedLabelDetail.inputs, function(input, i){
 				if( ! _.isEmpty(input.selector) && _.size($(input.selector)) > 0) {
 					if(submitSelector === null && isForm === null){
@@ -66,7 +69,9 @@ function checkDataLoad() {
 						}
 
 					}
-					if(input.type === 'radio' || input.type === 'checkbox') {
+					if(input.type === 'submit') {
+						submitBtnSelector = $(input.selector)
+					} else if(input.type === 'radio' || input.type === 'checkbox') {
 						$(input.selector).attr('checked', input.value);
 					} else {
 						$(input.selector).val(input.value);
@@ -83,24 +88,48 @@ function checkDataLoad() {
 				return true;
 			});
 			if(needToBeSubmitted) {
+				var isRedirectEnabled = false;
+				chrome.storage.local.set({'qwikAppTabAuth': true});
+				if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
+					isRedirectEnabled = true
+					chrome.storage.local.set({'qwikAppTabRedirect': true});
+				}
 				if(isForm){
-					chrome.storage.local.set({'qwikAppTabAuth': true});
-					if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
-						chrome.storage.local.set({'qwikAppTabRedirect': true});
-					}
-					var submitBtn = $(submitSelector).find('[type=submit]');
-					if(submitBtn.length > 0) {
-						submitBtn.trigger('click');
+					if(submitBtnSelector) {
+						if(!isRedirectEnabled) {
+							cleanValues();
+						}
+						submitBtnSelector.trigger('click');
 					} else {
-						$(submitSelector).submit();
+						var submitBtn = $(submitSelector).find('[type=submit]');
+						if(submitBtn.length > 0) {
+							if(!isRedirectEnabled) {
+								cleanValues();
+							}
+							submitBtn.trigger('click');
+						} else {
+							if(!isRedirectEnabled) {
+								cleanValues();
+							}
+							$(submitSelector).submit();
+						}
 					}
 				} else {
 					// TODO
 					// handle the form submission when there is no form element present
+					if(submitBtnSelector) {
+						if(!isRedirectEnabled) {
+							cleanValues();
+						}
+						submitBtnSelector.trigger('click');
+					} else {
+						console.log('Not able to submit form due to not configuring submit button!')
+					}
 				}
 			} else {
 				if(_.has(qwikApp.selectedLabelDetail, 'redirectUrl') && ! _.isEmpty(qwikApp.selectedLabelDetail.redirectUrl)) {
-					chrome.storage.local.set({'qwikAppTabRedirect': true});
+					// commenting out below statement as it looks like not required
+					// chrome.storage.local.set({'qwikAppTabRedirect': true});
 					// form no need to be submitted
 					// then try to redirect if redirect url is present
 					doRedirect();
